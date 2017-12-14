@@ -16,20 +16,21 @@ open class FileUtil {
 
         private val executor = Executors.newFixedThreadPool(5)
 
-
-        fun prepareFile(url: String){
+        fun prepareFile(url: String): File? {
             val parcedUrl = URL(url)
             val name = parcedUrl.file + ThreadLocalRandom.current().nextInt(0, 100)
             val dir = File("tmp/")
             if (!dir.exists()) dir.mkdir()
-            uploadFile(url, name, dir)
+            val fileFeature = uploadFile(url, name, dir)
+            while (!fileFeature?.isDone!!) Thread.sleep(200)
+            return fileFeature.get();
         }
 
-        fun uploadFile(url: String, name: String, dir: File): Future<File>? {
+        fun uploadFile(ur1: String, name: String, dir: File): Future<File>? {
             return executor.submit(Callable<File> {
-                Fuel.download(url).destination { _, _ ->
+                Fuel.download(ur1).destination {response, url ->
                     File(dir, name)
-                }.response { _, res, _ ->
+                }.response { req, res, result ->
                     println(res)
                 }
                 File(dir, name)

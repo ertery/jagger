@@ -9,13 +9,8 @@ import org.springframework.stereotype.Service
 import java.io.File
 import org.apache.commons.codec.digest.DigestUtils
 import org.springframework.transaction.annotation.Transactional
-
 import java.lang.Thread.sleep
 import java.util.concurrent.*
-import java.net.MalformedURLException
-import java.net.URISyntaxException
-import java.net.URL
-
 
 @Service
 class HashService(val taskService: TaskService) {
@@ -25,13 +20,16 @@ class HashService(val taskService: TaskService) {
     private val runningTasks: HashMap<Task, Future<String>> = HashMap()
 
 
-    fun startProcess(algo: AlgoType, filePath: String){
-        var file: File
-/*        if (FileUtil.isURL(filePath)) file = FileUtil.uploadFile(filePath, "test", )?.get()!!*/
+    fun startProcess(algo: AlgoType, filePath: String, owner: User) {
+        val file: File = if (FileUtil.isURL(filePath)) {
+            FileUtil.prepareFile(filePath)!!
+        }
+        else File(filePath)
+        processStatusCheck(createProcess(algo, file, owner))
     }
 
 
-    fun stopProcess(task: Task){
+    fun stopProcess(task: Task) {
         val future = runningTasks[task]
         future?.cancel(true)
     }

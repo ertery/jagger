@@ -16,7 +16,7 @@ internal class FileUtilTest{
 
     @Test
     fun downLoadFile(){
-        FileUtil.uploadFile("http://httpbin.org/bytes/32768", "hello.tmp", File("/tmp"))
+        FileUtil.uploadFile("http://httpbin.org/robots.txt", "hello.tmp", File("/tmp"))
         Thread.sleep(5000)
     }
 
