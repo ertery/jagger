@@ -13,7 +13,7 @@ data class User(
         val id: Long = -1,
 
         @Column
-        val uuid: UUID = UUID.randomUUID(),
+        val uuid: String = UUID.randomUUID().toString(),
 
         @OneToMany(mappedBy = "user", cascade = arrayOf(CascadeType.ALL), fetch = FetchType.EAGER)
         val tasks: MutableList<Task> = mutableListOf()

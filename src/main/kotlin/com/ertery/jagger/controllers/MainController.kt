@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*
 @CrossOrigin(origins = arrayOf("*"))
 class MainController(val service: HashService, val repository: UserRepository) {
 
-    @PostMapping("/")
+    @PostMapping("")
     fun startTask(@RequestBody file: FileDTO){
-        service.startProcess(AlgoType.SHA256, file.path, repository.findByUuid("cb3fa955-4d16-4806-83f8-8e9aab28459c"))
+        service.startProcess(AlgoType.valueOf(file.algo), file.path, repository.findByUuid("cb3fa955-4d16-4806-83f8-8e9aab28459c"))
     }
 }
